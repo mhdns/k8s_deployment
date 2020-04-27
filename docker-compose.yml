@@ -20,7 +20,9 @@ services:
     volumes:
       - /app/node_modules # Teliing docker not to overwrite
       - ./server:/app 
-    environment: 
+    depends_on: 
+      - postgres
+    environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - PGUSER=postgres
@@ -36,4 +38,13 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
-
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: './worker'
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
+    environment: 
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
